@@ -25,71 +25,7 @@ pipeline {
                     userRemoteConfigs: [[url: 'https://github.com/usach-devops-2021/TrabajoFinalM4Front.git']]])
             }
         }
-        stage("Paso 1: Compilar"){
-            steps {
-                dir("TrabajoFinalM4SWD") {
-                    script {
-                    sh "echo 'Compile Code!'"
-                    // Run Maven on a Unix agent.
-                    sh "mvn clean compile -e"
-                    }
-                }
-            }
-        }
-        stage("Paso 2: Testear"){
-            steps {
-                dir("TrabajoFinalM4SWD") {
-                    script {
-                    sh "echo 'Test Code!'"
-                    // Run Maven on a Unix agent.
-                    sh "mvn clean test -e"
-                    }
-                }
-            }
-        }
-        stage("Paso 3: Build .Jar"){
-            steps {
-                dir("TrabajoFinalM4SWD") {
-                    script {
-                    sh "echo 'Build .Jar!'"
-                    // Run Maven on a Unix agent.
-                    sh "mvn clean package -e"
-                    }
-                }
-            }
-        }
-        stage("Paso 4: Levantar Springboot APP"){
-            steps {
-                dir("TrabajoFinalM4SWD") {
-                    sh 'mvn spring-boot:run &'
-                }
-            }
-        }
-        stage("Paso 5: Dormir(Esperar 10sg) "){
-            steps {
-                sh 'sleep 10'
-            }
-        }
-        stage("Paso 6: Curl con Sleep de prueba "){
-            steps {
-               sh "curl -X GET 'http://localhost:8081/rest/msdxc/dxc?sueldo=500000&&ahorro=25000000'"
-            }
-        }
-        stage("Paso 7: Test Jmeter"){
-            steps {
-                dir("TrabajoFinalM4SWD") {
-                    sh 'mvn jmeter:jmeter -Pjmeter'
-                }
-            }
-        }
-        stage('Paso 8: Test API responses') {
-            steps {
-                dir("TrabajoFinalM4SWD") {
-                    sh "newman run LabMod4.postman_collection.json"
-                }
-            }
-        }
-        stage("Paso 9: Install npm modules"){
+        stage("Paso 3: Install npm modules"){
             steps {
                 dir("TrabajoFinalM4Front") {
                     script {
@@ -100,7 +36,7 @@ pipeline {
                 }
             }
         }
-        stage("Paso 10: Start Node Server"){
+        stage("Paso 4: Start Node Server"){
             steps {
                 dir("TrabajoFinalM4Front") {
                     script {
@@ -111,6 +47,56 @@ pipeline {
                 }
             }
         }
+        stage("Paso 5: Dormir(Esperar 10sg) "){
+            steps {
+                sh 'sleep 10'
+            }
+        }
+        stage("Paso 6: Curl con Sleep de prueba "){
+            steps {
+               sh "curl -X GET 'http://localhost:3000/'"
+            }
+        }
+        stage("Paso 7: Compilar"){
+            steps {
+                dir("TrabajoFinalM4SWD") {
+                    script {
+                    sh "echo 'Compile Code!'"
+                    // Run Maven on a Unix agent.
+                    sh "mvn clean compile -e"
+                    }
+                }
+            }
+        }
+        stage("Paso 8: Testear"){
+            steps {
+                dir("TrabajoFinalM4SWD") {
+                    script {
+                    sh "echo 'Test Code!'"
+                    // Run Maven on a Unix agent.
+                    sh "mvn clean test -e"
+                    }
+                }
+            }
+        }
+        stage("Paso 9: Build .Jar"){
+            steps {
+                dir("TrabajoFinalM4SWD") {
+                    script {
+                    sh "echo 'Build .Jar!'"
+                    // Run Maven on a Unix agent.
+                    sh "mvn clean package -e"
+                    }
+                }
+            }
+        }
+        stage("Paso 10: Levantar Springboot APP"){
+            steps {
+                dir("TrabajoFinalM4SWD") {
+                    sh 'mvn spring-boot:run &'
+                }
+            }
+        }
         stage("Paso 11: Dormir(Esperar 10sg) "){
             steps {
                 sh 'sleep 10'
@@ -118,9 +104,23 @@ pipeline {
         }
         stage("Paso 12: Curl con Sleep de prueba "){
             steps {
-               sh "curl -X GET 'http://localhost:3000/'"
+               sh "curl -X GET 'http://localhost:8081/rest/msdxc/dxc?sueldo=500000&&ahorro=25000000'"
             }
         }
+        stage("Paso 13: Test Jmeter"){
+            steps {
+                dir("TrabajoFinalM4SWD") {
+                    sh 'mvn jmeter:jmeter -Pjmeter'
+                }
+            }
+        }
+        stage('Paso 14: Test API responses') {
+            steps {
+                dir("TrabajoFinalM4SWD") {
+                    sh "newman run LabMod4.postman_collection.json"
+                }
+            }
+        }  
         
     }
 }
