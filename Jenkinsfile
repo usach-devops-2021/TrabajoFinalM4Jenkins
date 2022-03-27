@@ -3,7 +3,7 @@ pipeline {
 
     
     stages {
-        stage("Paso 01: Download and checkout API"){
+        stage("Paso 1: Download and checkout API"){
             steps {
                 checkout(
                     [$class: 'GitSCM',
@@ -14,7 +14,7 @@ pipeline {
                     userRemoteConfigs: [[url: 'https://github.com/usach-devops-2021/TrabajoFinalM4SWD.git']]])
             }
         }
-        stage("Paso 02: Download and checkout Front"){
+        stage("Paso 2: Download and checkout Front"){
             steps {
                 checkout(
                     [$class: 'GitSCM',
@@ -47,7 +47,7 @@ pipeline {
                 }
             }
         }
-        stage("Paso 5: Dormir (Esperar 15sg) (Front)"){
+        stage("Paso 5: Dormir (Esperar 15seg) (Front)"){
             steps {
                 sh 'sleep 15'
             }
@@ -73,12 +73,12 @@ pipeline {
                 sh 'mvn spring-boot:run &'
             }
         }
-        stage('Paso 9: Dormir(Esperar 60sg) (Back)') {
+        stage('Paso 9: Dormir(Esperar 60seg) (Back)') {
             steps {
                 sh 'sleep 60'
             }
         }
-        stage('Paso10: Curl con Sleep de prueba (Back)') {
+        stage('Paso 10: Curl con Sleep de prueba (Back)') {
             steps {
                 sh 'curl -X GET "http://localhost:8081/rest/msdxc/ping"'
             }
