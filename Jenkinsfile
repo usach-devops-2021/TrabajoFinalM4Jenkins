@@ -29,9 +29,9 @@ pipeline {
             steps {
                 dir("TrabajoFinalM4Front") {
                     script {
-                    sh "echo 'npm install!'"
-                    // Run Maven on a Unix agent.
-                    sh "npm install"
+                        sh "echo 'npm install!'"
+                        // Run Maven on a Unix agent.
+                        sh "npm install"
                     }
                 }
             }
@@ -40,19 +40,19 @@ pipeline {
             steps {
                 dir("TrabajoFinalM4Front") {
                     script {
-                    sh "echo 'npm app!'"
-                    // Run Maven on a Unix agent.
-                    sh "node app.js &"
+                        sh "echo 'npm app!'"
+                        // Run Maven on a Unix agent.
+                        sh "node app.js &"
                     }
                 }
             }
         }
-        stage("Paso 5: Dormir(Esperar 10sg) "){
+        stage("Paso 5: Dormir (Esperar 15sg) (Front)"){
             steps {
-                sh 'sleep 10'
+                sh 'sleep 15'
             }
         }
-        stage("Paso 6: Curl con Sleep de prueba "){
+        stage("Paso 6: Curl con Sleep de prueba (Front)"){
             steps {
                sh "curl -X GET 'http://localhost:3000/'"
             }
@@ -61,35 +61,52 @@ pipeline {
             steps {
                 dir("TrabajoFinalM4SWD") {
                     script {
-                    sh "echo 'Compile Code!'"
-                    // Run Maven on a Unix agent.
-                    sh "mvn clean compile -e"
+                        sh "echo 'Compile Code!'"
+                        // Run Maven on a Unix agent.
+                        sh "mvn clean compile -e"
                     }
                 }
             }
         }
-        stage("Paso 8: Testear"){
+        stage('Paso 8: Levantar Springboot APP (Back) para realizar pruebas siguientes') {
+            steps {
+                sh 'mvn spring-boot:run &'
+            }
+        }
+        stage('Paso 9: Dormir(Esperar 60sg) (Back)') {
+            steps {
+                sh 'sleep 60'
+            }
+        }
+        stage('Paso10: Curl con Sleep de prueba (Back)') {
+            steps {
+                sh 'curl -X GET "http://localhost:8081/rest/msdxc/ping"'
+            }
+        }
+        stage("Paso 11: Testear (Back)"){
             steps {
                 dir("TrabajoFinalM4SWD") {
                     script {
-                    sh "echo 'Test Code!'"
-                    // Run Maven on a Unix agent.
-                    sh "mvn clean test -e"
+                        sh "echo 'Test Code!'"
+                        sh "chmod +x src/driver/linx/chromedriver"
+                        // Run Maven on a Unix agent.
+                        sh "mvn clean test -e"
                     }
                 }
             }
         }
-        stage("Paso 9: Build .Jar"){
+        stage("Paso 12: Build .Jar (Back)"){
             steps {
                 dir("TrabajoFinalM4SWD") {
                     script {
-                    sh "echo 'Build .Jar!'"
-                    // Run Maven on a Unix agent.
-                    sh "mvn clean package -e"
+                        sh "echo 'Build .Jar!'"
+                        // Run Maven on a Unix agent.
+                        sh "mvn clean package -e"
                     }
                 }
             }
         }
+        /*
         stage("Paso 10: Levantar Springboot APP"){
             steps {
                 dir("TrabajoFinalM4SWD") {
@@ -107,14 +124,15 @@ pipeline {
                sh "curl -X GET 'http://localhost:8081/rest/msdxc/dxc?sueldo=500000&&ahorro=25000000'"
             }
         }
-        stage("Paso 13: Test Jmeter"){
+        */
+        stage("Paso 13: Test Jmeter (Back)"){
             steps {
                 dir("TrabajoFinalM4SWD") {
                     sh 'mvn jmeter:jmeter -Pjmeter'
                 }
             }
         }
-        stage('Paso 14: Test API responses') {
+        stage('Paso 14: Test API responses (Back)') {
             steps {
                 dir("TrabajoFinalM4SWD") {
                     sh "newman run LabMod4.postman_collection.json"
