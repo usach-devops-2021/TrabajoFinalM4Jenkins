@@ -59,18 +59,20 @@ pipeline {
         }
         stage("Paso 7: Compilar"){
             steps {
-                //dir("TrabajoFinalM4SWD") {
+                dir("TrabajoFinalM4SWD") {
                     script {
                         sh "echo 'Compile Code!'"
                         // Run Maven on a Unix agent.
                         sh "mvn clean compile -e"
                     }
-                //}
+                }
             }
         }
         stage('Paso 8: Levantar Springboot APP (Back) para realizar pruebas siguientes') {
             steps {
-                sh 'mvn spring-boot:run &'
+                dir("TrabajoFinalM4SWD") {
+                    sh 'mvn spring-boot:run &'
+                }
             }
         }
         stage('Paso 9: Dormir(Esperar 60seg) (Back)') {
